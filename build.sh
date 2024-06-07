@@ -7,10 +7,16 @@ RELEASE_TYPE="Release"
 
 UNAME=$(uname -s)
 PLATFORM=$(uname -m)
+
 if [[ ${UNAME} == *"MINGW64"* ]]; then
   suffix=".dll"
+  gui_suffix=".exe"
+elif [[ ${UNAME} == "Darwin" ]]; then
+  suffix=".dylib"
+  gui_suffix=".app"
 else
   suffix=".so"
+  gui_suffix=""
 fi
 
 install_dir=${PWD}/simple64
@@ -63,7 +69,11 @@ mkdir -p "${base_dir}/simple64-gui/build"
 cd "${base_dir}/simple64-gui/build"
 cmake -G Ninja -DCMAKE_BUILD_TYPE="${RELEASE_TYPE}" ..
 cmake --build .
-cp "${base_dir}/simple64-gui/build/simple64-gui" "${install_dir}"
+if [[ ${UNAME} == "Darwin" ]]; then
+  cp -r "${base_dir}/simple64-gui/build/simple64-gui${gui_suffix}" "${install_dir}"
+else
+  cp "${base_dir}/simple64-gui/build/simple64-gui${gui_suffix}" "${install_dir}"
+fi
 
 mkdir -p "${base_dir}/parallel-rsp/build"
 cd "${base_dir}/parallel-rsp/build"

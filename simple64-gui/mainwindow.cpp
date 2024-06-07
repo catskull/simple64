@@ -1088,7 +1088,7 @@ void MainWindow::loadPlugins()
     res = osal_dynlib_open(&inputPlugin, QDir(pluginPath).filePath(settings->value("inputPlugin").toString()).toUtf8().constData());
     if (res != M64ERR_SUCCESS)
     {
-        msgBox.setText("Failed to load input plugin");
+        msgBox.setText(settings->value("inputPlugin").toString());
         msgBox.exec();
         return;
     }

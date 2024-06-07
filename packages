@@ -1,0 +1,8 @@
+hidapi
+sdl2_net
+sdl2
+ninja
+molten-vk
+vulkan-loader
+qt@6
+pkg-config

@@ -4,6 +4,12 @@ set(CMAKE_OSX_DEPLOYMENT_TARGET "11.0")
 project(parallel-rdp LANGUAGES CXX C)
 
 set(NAME_PLUGIN_SIMPLE64 "simple64-video-parallel")
+
+# Ensure C++14 is enabled
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 include_directories(../mupen64plus-core/src/api)
 add_definitions(-DM64P_PLUGIN_API)
 
@@ -14,6 +20,14 @@ endif()
 
 if(WIN32)
     add_definitions(-DVK_USE_PLATFORM_WIN32_KHR)
+endif()
+
+# Find Vulkan
+find_package(Vulkan REQUIRED)
+if (Vulkan_FOUND)
+    message(STATUS "Found Vulkan: ${Vulkan_INCLUDE_DIR}")
+else()
+    message(FATAL_ERROR "Vulkan not found")
 endif()
 
 FILE(GLOB RDPSources parallel-rdp/*.cpp)
@@ -62,7 +76,10 @@ target_include_directories(${NAME_PLUGIN_SIMPLE64} PUBLIC
     volk
     vulkan
     vulkan-headers/include
-    util)
+    util
+    ${Vulkan_INCLUDE_DIR})
+
+target_link_libraries(${NAME_PLUGIN_SIMPLE64} Vulkan::Vulkan)
 
 if(WIN32)
     target_link_libraries(${NAME_PLUGIN_SIMPLE64} -lwinmm)
@@ -77,8 +94,8 @@ if (CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
     target_compile_options(${NAME_PLUGIN_SIMPLE64} PRIVATE -march=armv8-a)
     target_link_options(${NAME_PLUGIN_SIMPLE64} PRIVATE -march=armv8-a)
 else()
-    target_compile_options(${NAME_PLUGIN_SIMPLE64} PRIVATE -march=x86-64-v3)
-    target_link_options(${NAME_PLUGIN_SIMPLE64} PRIVATE -march=x86-64-v3)
+    target_compile_options(${NAME_PLUGIN_SIMPLE64} PRIVATE -march=native)
+    target_link_options(${NAME_PLUGIN_SIMPLE64} PRIVATE -march=native)
 endif()
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")

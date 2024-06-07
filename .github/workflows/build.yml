@@ -68,7 +68,7 @@ jobs:
         run: |
           brew update
           brew upgrade || true
-          brew install hidapi sdl2_net sdl2 ninja molten-vk vulkan-loader qt@6
+          brew install hidapi sdl2_net sdl2 ninja molten-vk vulkan-loader qt@6 pkg-config
       - name: Run build script
         run: |
           sudo sh ./build.sh

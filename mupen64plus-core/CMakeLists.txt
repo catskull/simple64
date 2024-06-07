@@ -11,6 +11,7 @@ endif()
 find_package(PNG REQUIRED)
 find_package(ZLIB REQUIRED)
 find_package(SDL2 REQUIRED)
+find_package(SDL2_net REQUIRED)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(SDL_NET REQUIRED SDL2_net)
 
@@ -21,6 +22,8 @@ include_directories(
     subprojects/minizip
     subprojects/xdelta
     ${SDL2_INCLUDE_DIRS}
+    ${SDL2_NET_INCLUDE_DIRS}
+    /opt/homebrew/include/SDL2
 )
 
 add_definitions(-DM64P_PARALLEL -DM64P_NETPLAY -DNO_ASM)
@@ -129,8 +132,8 @@ if (CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
     target_compile_options(mupen64plus PRIVATE -march=armv8-a)
     target_link_options(mupen64plus PRIVATE -march=armv8-a)
 else()
-    target_compile_options(mupen64plus PRIVATE -march=x86-64-v3)
-    target_link_options(mupen64plus PRIVATE -march=x86-64-v3)
+    target_compile_options(mupen64plus PRIVATE -march=native)
+    target_link_options(mupen64plus PRIVATE -march=native)
 endif()
 
 if (CMAKE_C_COMPILER_ID STREQUAL "Clang")
@@ -141,8 +144,8 @@ if (NOT APPLE AND NOT WIN32)
     target_link_options(mupen64plus PRIVATE -Wl,-Bsymbolic -Wl,-Bsymbolic-functions)
 endif ()
 
-target_link_directories(mupen64plus PRIVATE ${SDL_NET_LIBRARY_DIRS})
-target_link_libraries(mupen64plus PRIVATE SDL2::SDL2 ${SDL_NET_LIBRARIES} ZLIB::ZLIB PNG::PNG)
+target_link_directories(mupen64plus PRIVATE ${SDL_NET_LIBRARY_DIRS} /opt/homebrew/lib)
+target_link_libraries(mupen64plus PRIVATE SDL2::SDL2 SDL2_net ZLIB::ZLIB PNG::PNG)
 if (APPLE)
     target_link_libraries(mupen64plus PRIVATE "-framework CoreFoundation")
 endif (APPLE)

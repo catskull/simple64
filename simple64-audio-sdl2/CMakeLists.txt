@@ -9,7 +9,8 @@ if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
 endif()
 
 find_package(SDL2 REQUIRED)
-include_directories(${SDL2_INCLUDE_DIRS})
+find_package(SDL2_net REQUIRED)
+include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_NET_INCLUDE_DIRS})
 
 include_directories(../mupen64plus-core/src/api)
 
@@ -27,8 +28,8 @@ if (CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
     target_compile_options(simple64-audio-sdl2 PRIVATE -march=armv8-a)
     target_link_options(simple64-audio-sdl2 PRIVATE -march=armv8-a)
 else()
-    target_compile_options(simple64-audio-sdl2 PRIVATE -march=x86-64-v3)
-    target_link_options(simple64-audio-sdl2 PRIVATE -march=x86-64-v3)
+    target_compile_options(simple64-audio-sdl2 PRIVATE -march=native)
+    target_link_options(simple64-audio-sdl2 PRIVATE -march=native)
 endif()
 
 if (CMAKE_C_COMPILER_ID STREQUAL "Clang")

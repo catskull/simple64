@@ -13,6 +13,7 @@ include_directories(../mupen64plus-core/src/api)
 add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x0602ff)
 
 find_package(SDL2 REQUIRED)
+find_package(SDL2_net REQUIRED)
 find_package(Qt6 REQUIRED COMPONENTS Widgets Network)
 qt_standard_project_setup()
 
@@ -44,8 +45,8 @@ if (CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
     target_compile_options(simple64-input-qt PRIVATE -march=armv8-a)
     target_link_options(simple64-input-qt PRIVATE -march=armv8-a)
 else()
-    target_compile_options(simple64-input-qt PRIVATE -march=x86-64-v3)
-    target_link_options(simple64-input-qt PRIVATE -march=x86-64-v3)
+    target_compile_options(simple64-input-qt PRIVATE -march=native)
+    target_link_options(simple64-input-qt PRIVATE -march=native)
 endif()
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
